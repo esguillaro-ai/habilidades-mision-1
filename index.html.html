@@ -7,16 +7,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; font-family: "Poppins", sans-serif; background: #f0f0f5; }
+    html, body { font-family: "Poppins", sans-serif; background: #f0f0f5; min-height: 100vh; }
 
     /* ── LAYOUT ── */
-    #app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+    #app { display: flex; flex-direction: column; min-height: 100vh; }
 
     /* ── HEADER ── */
     #header {
       background: white; border-bottom: 1px solid #e5e7eb;
       padding: 0 24px; display: flex; align-items: center;
-      justify-content: space-between; flex-shrink: 0; height: 64px;
+      justify-content: space-between; height: 64px;
+      position: sticky; top: 0; z-index: 50;
     }
     .logo { display: flex; align-items: center; gap: 12px; }
     .logo-icon {
@@ -29,9 +30,7 @@
     .logo-text p  { font-size: 11px; color: #9ca3af; }
 
     /* Steps indicator */
-    #steps-bar {
-      display: flex; align-items: center; gap: 0;
-    }
+    #steps-bar { display: flex; align-items: center; gap: 0; }
     .step-item {
       display: flex; align-items: center; gap: 6px; padding: 6px 10px;
       border-radius: 20px; font-size: 12px; font-weight: 600;
@@ -50,13 +49,16 @@
     .step-connector.done { background: #059669; }
 
     /* ── MAIN AREA ── */
-    #main { flex: 1; display: flex; overflow: hidden; }
+    #main { display: flex; flex: 1; min-height: 0; }
 
     /* ── SIDEBAR ── */
     #sidebar {
       width: 220px; background: white; border-right: 1px solid #e5e7eb;
       padding: 20px 0; display: flex; flex-direction: column; gap: 2px;
-      flex-shrink: 0; overflow-y: auto;
+      flex-shrink: 0;
+      position: sticky; top: 64px;
+      height: calc(100vh - 64px - 56px);
+      overflow-y: auto;
     }
     .nav-item {
       display: flex; align-items: center; gap: 12px;
@@ -70,34 +72,31 @@
     }
     .nav-item .nav-label { font-weight: 500; line-height: 1.3; }
     .nav-item .nav-sub   { font-size: 10px; color: #9ca3af; margin-top: 1px; }
-    .nav-item.active {
-      background: #f5f3ff; border-left-color: #7c3aed; color: #5b21b6;
-    }
+    .nav-item.active { background: #f5f3ff; border-left-color: #7c3aed; color: #5b21b6; }
     .nav-item.active .nav-icon { background: #ede9fe; }
     .nav-item.done { color: #065f46; }
     .nav-item.done .nav-icon { background: #d1fae5; }
     .nav-item.locked { opacity: 0.45; cursor: not-allowed; }
 
     /* ── CONTENT PANEL ── */
-    #content {
-      flex: 1; overflow-y: auto; display: flex; flex-direction: column;
-      background: #f8f8fc;
-    }
+    #content { flex: 1; background: #f8f8fc; min-width: 0; }
 
     /* Mission slide */
-    .mission-slide { display: none; flex-direction: column; flex: 1; }
-    .mission-slide.active { display: flex; }
+    .mission-slide { display: none; }
+    .mission-slide.active { display: block; }
 
     .slide-inner {
-      flex: 1; padding: 28px 36px; overflow-y: auto;
+      padding: 28px 36px;
       display: flex; flex-direction: column; gap: 20px;
+      padding-bottom: 80px; /* room for sticky bottom bar */
     }
 
     /* ── BOTTOM BAR ── */
     #bottom-bar {
       background: white; border-top: 1px solid #e5e7eb;
       padding: 12px 36px; display: flex; align-items: center;
-      justify-content: space-between; flex-shrink: 0;
+      justify-content: space-between;
+      position: sticky; bottom: 0; z-index: 50; height: 56px;
     }
     .progress-info { display: flex; align-items: center; gap: 10px; }
     .progress-bar-wrap {
@@ -807,7 +806,7 @@
     document.getElementById("progressLabel").textContent = "Misión " + current + " de " + total;
     document.getElementById("progressFill").style.width = (Object.values(completed).filter(Boolean).length / total * 100) + "%";
     // Content scroll to top
-    document.getElementById("content").scrollTop = 0;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function markDone(n) {
